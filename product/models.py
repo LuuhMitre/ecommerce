@@ -3,20 +3,6 @@ from PIL import Image
 import os
 from django.conf import settings
 
-'''
-Produto:
-        Produto:
-            nome - Char
-            descricao_curta - Text
-            descricao_longa - Text
-            imagem - Image
-            slug - Slug
-            preco_marketing - Float
-            preco_marketing_promocional - Float
-            tipo - Choices
-                ('V', 'Variável'),
-                ('S', 'Simples'),
-'''
 
 
 class Product(models.Model):
@@ -66,12 +52,17 @@ class Product(models.Model):
         return self.name
 
 
-'''
-        Variacao:
-            nome - char
-            produto - FK Produto
-            preco - Float
-            preco_promocional - Float
-            estoque - Int
+class Variation(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=50, blank=True, null=True)
+    price = models.FloatField()
+    promotional_price = models.FloatField(default=0)
+    stock = models.PositiveIntegerField(default=1)
 
-'''
+    def __str__(self):
+        return self.name or self.product.name
+    
+    class Meta: 
+        verbose_name = 'Variation'
+        verbose_name_plural = 'Variations'
+    
